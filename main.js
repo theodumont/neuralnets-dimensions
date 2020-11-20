@@ -1,6 +1,7 @@
 let defaultRowCount = 2; // No of rows
 let defaultColCount = 5; // No of cols
 let defaultColNames = ["Layer", "Kernel size", "Padding", "Stride", "Dilation", "Output"];
+let defaultColValues = [null, null, 0, 1, 1, null];
 const SPREADSHEET_DB = "spreadsheet_db";
 
 initializeData = () => {
@@ -119,13 +120,24 @@ populateTable = () => {
   }
 };
 
+// Get a value
+getValue = (data_row, name) => {
+  let tableValue = Number(data_row[defaultColNames.indexOf(name)]);
+  let trueValue = (
+    (tableValue == "") ?
+    defaultColValues[defaultColNames.indexOf(name)] :
+    tableValue
+    );
+  return trueValue;
+}
+
 // Formula for output
 computeDimension = (data_i0, data_i1) => {
-  let inp = Number(data_i0[defaultColNames.indexOf("Output")]);
-  let ker = Number(data_i1[defaultColNames.indexOf("Kernel size")]);
-  let pad = Number(data_i1[defaultColNames.indexOf("Padding")]);
-  let str = Number(data_i1[defaultColNames.indexOf("Stride")]);
-  let dil = Number(data_i1[defaultColNames.indexOf("Dilation")]);
+  let inp = getValue(data_i0, "Output");
+  let ker = getValue(data_i1, "Kernel size");
+  let pad = getValue(data_i1, "Padding");
+  let str = getValue(data_i1, "Stride");
+  let dil = getValue(data_i1, "Dilation");
   let out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
   return out;
 };
@@ -136,8 +148,6 @@ computeCells = () => {
   const data = this.getData();
   for (let i = 2; i < data.length; i++) {
     data[i][defaultColNames.indexOf("Output")] = computeDimension(data[i-1], data[i]);
-    for (let j = 1; j < data[i].length; j++) {
-    }
   }
   saveData(data);
   this.createSpreadsheet();
@@ -171,7 +181,7 @@ deleteRow = currentRow => {
   console.log("deleteRow");
   let data = this.getData();
   data.splice(currentRow, 1);
-  defaultRowCount++;
+  defaultRowCount--;
   saveData(data);
   this.createSpreadsheet();
 };
@@ -192,10 +202,11 @@ addColumn = (currentCol, direction) => {
   defaultColCount++;
   if (direction === "left") {
     defaultColNames.splice(currentCol, 0, "GAUCHE");
+    defaultColValues.splice(currentCol, 0, null);
   } else if (direction === "right") {
     defaultColNames.splice(currentCol + 1, 0, "DROITE");
+    defaultColValues.splice(currentCol + 1, 0, null);
   }
-  console.log(defaultColNames);
   saveData(data);
   this.createSpreadsheet();
 };
@@ -209,6 +220,7 @@ deleteColumn = currentCol => {
   }
   defaultColCount++;
   defaultColNames.splice(currentCol, 1);
+  defaultColValues.splice(currentCol, 1);
   saveData(data);
   this.createSpreadsheet();
 };
