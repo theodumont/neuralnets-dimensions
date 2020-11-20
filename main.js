@@ -33,6 +33,9 @@ resetData = data => {
   this.createSpreadsheet();
 };
 
+
+// TABLE ====================================================================
+
 createHeaderRow = () => {
   console.log("createHeaderRow");
   const tr = document.createElement("tr");
@@ -116,6 +119,32 @@ populateTable = () => {
   }
 };
 
+// Formula for output
+computeDimension = (data_i0, data_i1) => {
+  let inp = Number(data_i0[defaultColNames.indexOf("Output")]);
+  let ker = Number(data_i1[defaultColNames.indexOf("Kernel size")]);
+  let pad = Number(data_i1[defaultColNames.indexOf("Padding")]);
+  let str = Number(data_i1[defaultColNames.indexOf("Stride")]);
+  let dil = Number(data_i1[defaultColNames.indexOf("Dilation")]);
+  let out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
+  return out;
+};
+
+// Compute cell values
+computeCells = () => {
+  console.log("###### COMPUTE");
+  const data = this.getData();
+  for (let i = 2; i < data.length; i++) {
+    data[i][defaultColNames.indexOf("Output")] = computeDimension(data[i-1], data[i]);
+    for (let j = 1; j < data[i].length; j++) {
+    }
+  }
+  saveData(data);
+  this.createSpreadsheet();
+};
+
+// MODIFY ROWS ================================================================
+
 // Utility function to add or duplicate row
 addRow = (currentRow, direction, action) => {
   console.log("addRow");
@@ -146,6 +175,8 @@ deleteRow = currentRow => {
   saveData(data);
   this.createSpreadsheet();
 };
+
+// MODIFY COLUMNS =============================================================
 
 // Utility function to add columns
 addColumn = (currentCol, direction) => {
@@ -182,6 +213,7 @@ deleteColumn = currentCol => {
   this.createSpreadsheet();
 };
 
+// CREATE SHEET ===============================================================
 
 createSpreadsheet = () => {
   console.log("createSpreadsheet");
