@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="img/google-sheets-logo-.png" type="image/x-icon">
+    <title>Basic Spreadsheet App Demo</title>
+</head>
+
+<body>
+    <section class="title" style="">
+        <img src="img/google-sheets-logo-.png" alt="sheets" class="title__logo">
+        <div class="title__text">
+            <h1 class="title__text--name">Basic Spreadsheet App Demo</h1>
+            <h3 class="title__text--description">A basic spreadsheet made with HTML5, CSS and JavaScript</h3>
+        </div>
+    </section>
+    <section class="spreadsheet">
+        <table class="spreadsheet__table" id="table-main">
+            <thead class="spreadsheet__table--headers" id="table-headers"></thead>
+            <tbody class="spreadsheet__table--body" id="table-body"></tbody>
+        </table>
+    </section>
+    <section class="spreadsheet-controls">
+        <button class="reset-btn" id="reset">Reset Data</button>
+    </section>
+    <script src="main.js"></script>
+</body>
+</html>
