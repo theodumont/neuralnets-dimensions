@@ -1,5 +1,6 @@
-let defaultRowCount = 15; // No of rows
-let defaultColCount = 12; // No of cols
+let defaultRowCount = 2; // No of rows
+let defaultColCount = 5; // No of cols
+let defaultColNames = ["Layer", "Kernel size", "Padding", "Stride", "Dilation", "Output"];
 const SPREADSHEET_DB = "spreadsheet_db";
 
 initializeData = () => {
@@ -43,7 +44,8 @@ createHeaderRow = () => {
     // th.innerHTML = i === 0 ? `` : `Col ${i}`;
     if (i !== 0) {
       const span = document.createElement("span");
-      span.innerHTML = `Colonne ${i}`;
+      span.innerHTML = defaultColNames[i];
+      // span.innerHTML = `Colonne ${i}`;
       span.setAttribute("class", "column-header-span");
       const dropDownDiv = document.createElement("div");
       dropDownDiv.setAttribute("class", "dropdown");
@@ -77,6 +79,7 @@ createTableBodyRow = rowNum => {
         <div id="row-dropdown-${rowNum}" class="dropdown-content">
           <p class="row-insert-top">Insert 1 row above</p>
           <p class="row-insert-bottom">Insert 1 row below</p>
+          <p class="row-duplicate">Duplicate row</p>
           <p class="row-delete">Delete row</p>
         </div>`;
       cell.appendChild(span);
@@ -113,12 +116,17 @@ populateTable = () => {
   }
 };
 
-// Utility function to add row
-addRow = (currentRow, direction) => {
+// Utility function to add or duplicate row
+addRow = (currentRow, direction, action) => {
   console.log("addRow");
   let data = this.getData();
   const colCount = data[0].length;
-  const newRow = new Array(colCount).fill("");
+  let newRow;
+  if (action === "insert") {
+    newRow = new Array(colCount).fill("");
+  } else if (action === "duplicate") {
+    newRow = data[currentRow].slice();
+  }
   if (direction === "top") {
     data.splice(currentRow, 0, newRow);
   } else if (direction === "bottom") {
@@ -151,6 +159,12 @@ addColumn = (currentCol, direction) => {
     }
   }
   defaultColCount++;
+  if (direction === "left") {
+    defaultColNames.splice(currentCol, 0, "GAUCHE");
+  } else if (direction === "right") {
+    defaultColNames.splice(currentCol + 1, 0, "DROITE");
+  }
+  console.log(defaultColNames);
   saveData(data);
   this.createSpreadsheet();
 };
@@ -163,77 +177,11 @@ deleteColumn = currentCol => {
     data[i].splice(currentCol, 1);
   }
   defaultColCount++;
+  defaultColNames.splice(currentCol, 1);
   saveData(data);
   this.createSpreadsheet();
 };
 
-// Map for storing the sorting history of every column;
-const sortingHistory = new Map();
-
-// Utility function to sort columns
-sortColumn = currentCol => {
-  console.log("sortColumn");
-  let spreadSheetData = this.getData();
-  let data = spreadSheetData.slice(1);
-  if (!data.some(a => a[currentCol] !== "")) return;
-  if (sortingHistory.has(currentCol)) {
-    const sortOrder = sortingHistory.get(currentCol);
-    switch (sortOrder) {
-      case "desc":
-        data.sort(ascSort.bind(this, currentCol));
-        sortingHistory.set(currentCol, "asc");
-        break;
-      case "asc":
-        data.sort(dscSort.bind(this, currentCol));
-        sortingHistory.set(currentCol, "desc");
-        break;
-    }
-  } else {
-    data.sort(ascSort.bind(this, currentCol));
-    sortingHistory.set(currentCol, "asc");
-  }
-  data.splice(0, 0, new Array(data[0].length).fill(""));
-  saveData(data);
-  this.createSpreadsheet();
-};
-
-// Compare Functions for sorting - ascending
-const ascSort = (currentCol, a, b) => {
-  console.log("ascSort");
-  let _a = a[currentCol];
-  let _b = b[currentCol];
-  if (_a === "") return 1;
-  if (_b === "") return -1;
-
-  // Check for strings and numbers
-  if (isNaN(_a) || isNaN(_b)) {
-    _a = _a.toUpperCase();
-    _b = _b.toUpperCase();
-    if (_a < _b) return -1;
-    if (_a > _b) return 1;
-    return 0;
-  }
-  return _a - _b;
-};
-
-// Descending compare function
-const dscSort = (currentCol, a, b) => {
-  console.log("dscSort");
-  let _a = a[currentCol];
-  let _b = b[currentCol];
-  if (_a === "") return 1;
-  if (_b === "") return -1;
-
-  // Check for strings and numbers
-  if (isNaN(_a) || isNaN(_b)) {
-    _a = _a.toUpperCase();
-    _b = _b.toUpperCase();
-    if (_a < _b) return 1;
-    if (_a > _b) return -1;
-    return 0;
-  }
-  return _b - _a;
-};
 
 createSpreadsheet = () => {
   console.log("createSpreadsheet");
@@ -259,6 +207,7 @@ createSpreadsheet = () => {
 
   // attach focusout event listener to whole table body container
   tableBody.addEventListener("focusout", function(e) {
+    console.log("focusout");
     if (e.target && e.target.nodeName === "TD") {
       let item = e.target;
       const indices = item.id.split("-");
@@ -270,6 +219,7 @@ createSpreadsheet = () => {
 
   // Attach click event listener to table body
   tableBody.addEventListener("click", function(e) {
+    console.log("click");
     if (e.target) {
       if (e.target.className === "dropbtn") {
         const idArr = e.target.id.split("-");
@@ -279,11 +229,15 @@ createSpreadsheet = () => {
       }
       if (e.target.className === "row-insert-top") {
         const indices = e.target.parentNode.id.split("-");
-        addRow(parseInt(indices[2]), "top");
+        addRow(parseInt(indices[2]), "top", "insert");
       }
       if (e.target.className === "row-insert-bottom") {
         const indices = e.target.parentNode.id.split("-");
-        addRow(parseInt(indices[2]), "bottom");
+        addRow(parseInt(indices[2]), "bottom", "insert");
+      }
+      if (e.target.className === "row-duplicate") {
+        const indices = e.target.parentNode.id.split("-");
+        addRow(parseInt(indices[2]), "top", "duplicate");
       }
       if (e.target.className === "row-delete") {
         const indices = e.target.parentNode.id.split("-");
@@ -291,12 +245,11 @@ createSpreadsheet = () => {
       }
     }
   });
-
   // Attach click event listener to table headers
   tableHeaders.addEventListener("click", function(e) {
     if (e.target) {
       if (e.target.className === "column-header-span") {
-        sortColumn(parseInt(e.target.parentNode.id.split("-")[2]));
+        console.log("sorting");
       }
       if (e.target.className === "dropbtn") {
         const idArr = e.target.id.split("-");
@@ -318,12 +271,14 @@ createSpreadsheet = () => {
       }
     }
   });
+
 };
 
 createSpreadsheet();
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
+  console.log("windowout");
   if (!event.target.matches(".dropbtn")) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
