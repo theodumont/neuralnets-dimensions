@@ -1,7 +1,7 @@
-let defaultRowCount = 2; // No of rows
+let defaultRowCount = 7; // No of rows
 let defaultColCount = 5; // No of cols
 let defaultColNames = ["Layer", "Kernel size", "Padding", "Stride", "Dilation", "Output"];
-let defaultColValues = [null, null, 0, 1, 1, null];
+let defaultColValues = [NaN, NaN, 0, 1, 1, NaN];
 const SPREADSHEET_DB = "spreadsheet_db";
 
 initializeData = () => {
@@ -13,6 +13,7 @@ initializeData = () => {
     }
     data.push(child);
   }
+  data[1][defaultColCount] = "320";
   return data;
 };
 
