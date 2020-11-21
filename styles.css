@@ -7,6 +7,13 @@
 html {
   font-size: 62.5%;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  height: 99%;
+}
+
+body {
+  min-height:100%;
+  position: relative;
+  padding-bottom: 10em;
 }
 
 .title {
@@ -14,6 +21,8 @@ html {
   flex-direction: row;
   align-items: center;
   margin: 1rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .title__logo {
@@ -42,12 +51,13 @@ html {
 .description__text {
   font-size: 1.3rem;
   font-weight: 350;
-  margin-left: 2rem;
+  margin: 2rem;
 }
 
 .description__formula {
   height: 3.5rem;
-  margin: 1rem;
+  margin-top: 0rem;
+  margin-bottom: 2rem;
   margin-left: 10rem;
 }
 
@@ -195,4 +205,53 @@ tbody th {
   color: #fff;
   background-color: #5fa324;
   border-color: #518b1e;
+}
+
+.footer {
+  margin: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  border-top: 1px solid #e8e8e8;
+  color: #828282;
+  position: absolute;
+  bottom: 0;
+  height: 5em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 90%;
+  font-size: 1rem;
+  font-weight: 200;
+}
+
+.footer-name {
+  padding-left: 2rem;
+}
+
+.footer-link {
+  font-weight: 350;
+  float: right;
+  padding-left: 4rem;
+}
+
+a {
+  color: #2a7ae2;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #1756a9;
+}
+
+a:hover {
+  color: #111; text-decoration: underline;
+}
+
+.svg-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  fill: #828282;
+  padding-right: 5px;
+  vertical-align: text-top;
 }

@@ -1,40 +1,55 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="shortcut icon" href="img/ruler.ico" type="image/x-icon">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="img/ruler.ico" type="image/x-icon" />
     <title>Dimensions calculator for CNN</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <section class="title" style="">
-        <img src="img/ruler.png" alt="sheets" class="title__logo">
-        <div class="title__text">
-            <h1 class="title__text--name">Dimensions calculator for CNN</h1>
-            <h3 class="title__text--description">Compute the dimensions of the output of your neural network from the parameters of its layers.</h3>
-        </div>
+      <img src="img/ruler.png" alt="sheets" class="title__logo" />
+      <div class="title__text">
+        <h1 class="title__text--name">Dimensions calculator for CNN</h1>
+        <h3 class="title__text--description">Compute the dimensions of the output of your neural network from the parameters of its layers.</h3>
+      </div>
     </section>
     <section class="description">
-        <p class="description__text">
-            This is a simple spreadsheet that I use whenever I need to manually check the output dimensions of my neural networks.
-            <br>
-            For now, the only operations allowed are convolutions. The dimensions are computed from the parameters of each convolution, namely the kernel size <img src="https://latex.codecogs.com/svg.latex?k" title="k" height=10px/>, the padding <img src="https://latex.codecogs.com/svg.latex?p" title="p" height=9.8px align="absbottom"/>, the stride <img src="https://latex.codecogs.com/svg.latex?s" title="s" height=7px/> and the dilation rate <img src="https://latex.codecogs.com/svg.latex?d" title="d" height=10px/> using the formula:
-        </p>
-        <img src="https://latex.codecogs.com/svg.latex?n_{out}=\left\lfloor\frac{n_{in}+2p-k-(k-1)(d-1)}{s}\right\rfloor+1" title="formula" class="description__formula"/>
+      <p class="description__text">
+        This is a simple spreadsheet that I use whenever I need to manually check the output dimensions of my neural networks.
+        <br />
+        For now, the only operations allowed are convolutions. The dimensions are computed from the parameters of each convolution, namely the kernel size <img src="https://latex.codecogs.com/svg.latex?k" title="k" height="10px" />, the
+        padding <img src="https://latex.codecogs.com/svg.latex?p" title="p" height="9.8px" align="absbottom" />, the stride <img src="https://latex.codecogs.com/svg.latex?s" title="s" height="7px" /> and the dilation rate
+        <img src="https://latex.codecogs.com/svg.latex?d" title="d" height="10px" /> using the formula:
+      </p>
+      <img src="https://latex.codecogs.com/svg.latex?n_{out}=\left\lfloor\frac{n_{in}+2p-k-(k-1)(d-1)}{s}\right\rfloor+1" title="formula" class="description__formula" />
     </section>
     <section class="spreadsheet">
-        <table class="spreadsheet__table" id="table-main">
-            <thead class="spreadsheet__table--headers" id="table-headers"></thead>
-            <tbody class="spreadsheet__table--body" id="table-body"></tbody>
-        </table>
+      <table class="spreadsheet__table" id="table-main">
+        <thead class="spreadsheet__table--headers" id="table-headers"></thead>
+        <tbody class="spreadsheet__table--body" id="table-body"></tbody>
+      </table>
     </section>
     <section class="spreadsheet-controls">
-        <button class="add-row-btn" id="addrow">Add row</button>
-        <button class="reset-btn" id="reset">Reset Data</button>
+      <button class="add-row-btn" id="addrow">Add row</button>
+      <button class="reset-btn" id="reset">Reset Data</button>
     </section>
+    <div class="spacer"></div>
     <script src="main.js"></script>
-</body>
+  </body>
+
+  <footer class="footer">
+    <div class="footer-name">
+      Théo Dumont, 2020
+    </div>
+    <div>
+      <a href="https://github.com/theodumont/neuralnets-dimensions" title="Source code on GitHub" class="footer-link">source</a>
+    </div>
+    <div>
+      <a href="https://theodumont.github.io" title="Contact me" class="footer-link">contact</a>
+    </div>
+  </footer>
 </html>
