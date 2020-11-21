@@ -158,6 +158,9 @@ computeCells = () => {
 // Utility function to add or duplicate row
 addRow = (currentRow, direction, action) => {
   console.log("addRow");
+  if (currentRow === -1) {  // add at the very bottom
+    currentRow = defaultRowCount;
+  }
   let data = this.getData();
   const colCount = data[0].length;
   let newRow;
@@ -341,4 +344,8 @@ document.getElementById("reset").addEventListener("click", e => {
   ) {
     this.resetData();
   }
+});
+
+document.getElementById("addrow").addEventListener("click", e => {
+  this.addRow(-1, "bottom", "insert");
 });
