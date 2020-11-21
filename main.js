@@ -5,7 +5,6 @@ let defaultColValues = [null, null, 0, 1, 1, null];
 const SPREADSHEET_DB = "spreadsheet_db";
 
 initializeData = () => {
-  console.log("initializeData");
   const data = [];
   for (let i = 0; i <= defaultRowCount; i++) {
     const child = [];
@@ -38,7 +37,6 @@ resetData = data => {
 // TABLE ====================================================================
 
 createHeaderRow = () => {
-  console.log("createHeaderRow");
   const tr = document.createElement("tr");
   tr.setAttribute("id", "h-0");
   for (let i = 0; i <= defaultColCount; i++) {
@@ -68,7 +66,6 @@ createHeaderRow = () => {
 };
 
 createTableBodyRow = rowNum => {
-  console.log("createTableBodyRow");
   const tr = document.createElement("tr");
   tr.setAttribute("id", `r-${rowNum}`);
   for (let i = 0; i <= defaultColCount; i++) {
@@ -89,6 +86,8 @@ createTableBodyRow = rowNum => {
       cell.appendChild(span);
       cell.appendChild(dropDownDiv);
       cell.setAttribute("class", "row-header");
+    } else if (i === defaultColCount) {
+      cell.contentEditable = false;
     } else {
       cell.contentEditable = true;
     }
@@ -100,7 +99,6 @@ createTableBodyRow = rowNum => {
 };
 
 createTableBody = tableBody => {
-  console.log("createTableBody");
   for (let rowNum = 1; rowNum <= defaultRowCount; rowNum++) {
     tableBody.appendChild(this.createTableBodyRow(rowNum));
   }
@@ -108,7 +106,6 @@ createTableBody = tableBody => {
 
 // Fill Data in created table from localstorage
 populateTable = () => {
-  console.log("populateTable");
   const data = this.getData();
   if (data === undefined || data === null) return;
 
@@ -157,7 +154,6 @@ computeCells = () => {
 
 // Utility function to add or duplicate row
 addRow = (currentRow, direction, action) => {
-  console.log("addRow");
   if (currentRow === -1) {  // add at the very bottom
     currentRow = defaultRowCount;
   }
@@ -181,7 +177,6 @@ addRow = (currentRow, direction, action) => {
 
 // Utility function to delete row
 deleteRow = currentRow => {
-  console.log("deleteRow");
   let data = this.getData();
   data.splice(currentRow, 1);
   defaultRowCount--;
@@ -193,7 +188,6 @@ deleteRow = currentRow => {
 
 // Utility function to add columns
 addColumn = (currentCol, direction) => {
-  console.log("addColumn");
   let data = this.getData();
   for (let i = 0; i <= defaultRowCount; i++) {
     if (direction === "left") {
@@ -216,7 +210,6 @@ addColumn = (currentCol, direction) => {
 
 // Utility function to delete column
 deleteColumn = currentCol => {
-  console.log("deleteColumn");
   let data = this.getData();
   for (let i = 0; i <= defaultRowCount; i++) {
     data[i].splice(currentCol, 1);
@@ -231,7 +224,6 @@ deleteColumn = currentCol => {
 // CREATE SHEET ===============================================================
 
 createSpreadsheet = () => {
-  console.log("createSpreadsheet");
   const spreadsheetData = this.getData();
   defaultRowCount = spreadsheetData.length - 1 || defaultRowCount;
   defaultColCount = spreadsheetData[0].length - 1 || defaultColCount;
@@ -257,10 +249,18 @@ createSpreadsheet = () => {
     console.log("focusout");
     if (e.target && e.target.nodeName === "TD") {
       let item = e.target;
+      console.log(item);
       const indices = item.id.split("-");
       let spreadsheetData = getData();
-      spreadsheetData[indices[1]][indices[2]] = item.innerHTML;
+      spreadsheetData[indices[1]][indices[2]] = item.innerHTML
+        .replaceAll("<br>", "")
+        .replaceAll("&nbsp;", "")
+        .replaceAll(/[^0-9]/g, "");
       saveData(spreadsheetData);
+      computeCells();
+    }
+    else {
+      console.log("pichs");
     }
   });
 
