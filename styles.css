@@ -207,6 +207,24 @@ tbody th {
   border-color: #518b1e;
 }
 
+.load-template-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #73c62a;
+  color: #fff;
+  border-color: #69b427;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: ease 0.3s;
+}
+
+.load-template-btn:hover {
+  color: #fff;
+  background-color: #5fa324;
+  border-color: #518b1e;
+}
+
 .footer {
   margin: 1rem;
   padding-top: 2rem;

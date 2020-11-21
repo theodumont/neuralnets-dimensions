@@ -142,7 +142,6 @@ computeDimension = (data_i0, data_i1) => {
 
 // Compute cell values
 computeCells = () => {
-  console.log("###### COMPUTE");
   const data = this.getData();
   for (let i = 2; i < data.length; i++) {
     data[i][defaultColNames.indexOf("Output")] = computeDimension(data[i-1], data[i]);
@@ -247,10 +246,8 @@ createSpreadsheet = () => {
 
   // attach focusout event listener to whole table body container
   tableBody.addEventListener("focusout", function(e) {
-    console.log("focusout");
     if (e.target && e.target.nodeName === "TD") {
       let item = e.target;
-      console.log(item);
       const indices = item.id.split("-");
       let spreadsheetData = getData();
       spreadsheetData[indices[1]][indices[2]] = item.innerHTML
@@ -260,14 +257,10 @@ createSpreadsheet = () => {
       saveData(spreadsheetData);
       computeCells();
     }
-    else {
-      console.log("pichs");
-    }
   });
 
   // Attach click event listener to table body
   tableBody.addEventListener("click", function(e) {
-    console.log("click");
     if (e.target) {
       if (e.target.className === "dropbtn") {
         const idArr = e.target.id.split("-");
@@ -326,7 +319,6 @@ createSpreadsheet();
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
-  console.log("windowout");
   if (!event.target.matches(".dropbtn")) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
@@ -349,4 +341,8 @@ document.getElementById("reset").addEventListener("click", e => {
 
 document.getElementById("addrow").addEventListener("click", e => {
   this.addRow(-1, "bottom", "insert");
+});
+
+document.getElementById("load").addEventListener("click", e => {
+  console.log("try to add template");
 });
