@@ -86,11 +86,11 @@ createTableBodyRow = rowNum => {
       cell.appendChild(span);
       cell.appendChild(dropDownDiv);
       cell.setAttribute("class", "row-header");
-    } else if (i === defaultColCount) {
+    } else if (i === defaultColCount || rowNum === 1) {
       // console.log(cell.style)
       cell.contentEditable = false;
       cell.style.backgroundColor = "#f5f5f5";
-      if (rowNum === 1) {
+      if (rowNum === 1 && i === defaultColCount) {
         cell.style.borderColor = "#73c62a";
         cell.style.borderWidth = "2px";
         cell.style.borderRadius = "2px";
