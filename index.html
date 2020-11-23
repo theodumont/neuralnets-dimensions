@@ -28,6 +28,22 @@
       <img src="https://latex.codecogs.com/svg.latex?n_{out}=\left\lfloor\frac{n_{in}+2p-k-(k-1)(d-1)}{s}\right\rfloor+1" title="formula" class="description__formula" />
     </section>
     <section class="spreadsheet">
+      <p class="description__text">
+        Simply fill the spatial dimension of your input tensor here:
+      </p>
+      <table class="input-table">
+        <tr>
+          <th class="input-header">Input</th>
+          <th class="output-header">Output</th>
+        </tr>
+        <tr>
+          <td class="input-cell" id="table-input" contenteditable="true">320</th>
+          <td class="output-cell" id="table-output"></th>
+        </tr>
+      </table>
+      <p class="description__text">
+        and the parameters of each layer of the network here:
+      </p>
       <table class="spreadsheet__table" id="table-main">
         <thead class="spreadsheet__table--headers" id="table-headers"></thead>
         <tbody class="spreadsheet__table--body" id="table-body"></tbody>

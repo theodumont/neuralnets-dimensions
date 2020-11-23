@@ -13,7 +13,6 @@ initializeData = () => {
     }
     data.push(child);
   }
-  data[1][defaultColCount] = "320";
   return data;
 };
 
@@ -88,7 +87,18 @@ createTableBodyRow = rowNum => {
       cell.appendChild(dropDownDiv);
       cell.setAttribute("class", "row-header");
     } else if (i === defaultColCount) {
+      // console.log(cell.style)
       cell.contentEditable = false;
+      cell.style.backgroundColor = "#f5f5f5";
+      if (rowNum === 1) {
+        cell.style.borderColor = "#73c62a";
+        cell.style.borderWidth = "2px";
+        cell.style.borderRadius = "2px";
+      } else if (rowNum === defaultRowCount) {
+        cell.style.borderColor = "#f88787";
+        cell.style.borderWidth = "2px";
+        cell.style.borderRadius = "2px";
+      }
     } else {
       cell.contentEditable = true;
     }
@@ -116,6 +126,11 @@ populateTable = () => {
       cell.innerHTML = data[i][j];
     }
   }
+  // put input/output values into table
+  let inputItem = document.getElementById("table-input");
+  inputItem.innerHTML = data[1][defaultColCount];
+  let outputItem = document.getElementById("table-output");
+  outputItem.innerHTML = data[defaultRowCount][defaultColCount];
 };
 
 // Get a value
@@ -147,6 +162,8 @@ computeCells = () => {
     data[i][defaultColNames.indexOf("Output")] = computeDimension(data[i-1], data[i]);
   }
   saveData(data);
+  let item = document.getElementById("table-output");
+  item.innerHTML = data[defaultRowCount][defaultColCount];
   this.createSpreadsheet();
 };
 
@@ -172,6 +189,7 @@ addRow = (currentRow, direction, action) => {
   }
   defaultRowCount++;
   saveData(data);
+  computeCells();
   this.createSpreadsheet();
 };
 
@@ -181,6 +199,7 @@ deleteRow = currentRow => {
   data.splice(currentRow, 1);
   defaultRowCount--;
   saveData(data);
+  computeCells();
   this.createSpreadsheet();
 };
 
@@ -230,13 +249,17 @@ createSpreadsheet = () => {
 
   const tableHeaderElement = document.getElementById("table-headers");
   const tableBodyElement = document.getElementById("table-body");
+  const tableInputElement = document.getElementById("table-input");
 
   const tableBody = tableBodyElement.cloneNode(true);
   tableBodyElement.parentNode.replaceChild(tableBody, tableBodyElement);
   const tableHeaders = tableHeaderElement.cloneNode(true);
   tableHeaderElement.parentNode.replaceChild(tableHeaders, tableHeaderElement);
+  const tableInput = tableInputElement.cloneNode(true);
+  tableInputElement.parentNode.replaceChild(tableInput, tableInputElement);
 
   tableHeaders.innerHTML = "";
+  tableBody.innerHTML = "";
   tableBody.innerHTML = "";
 
   tableHeaders.appendChild(createHeaderRow(defaultColCount));
@@ -251,6 +274,20 @@ createSpreadsheet = () => {
       const indices = item.id.split("-");
       let spreadsheetData = getData();
       spreadsheetData[indices[1]][indices[2]] = item.innerHTML
+        .replaceAll("<br>", "")
+        .replaceAll("&nbsp;", "")
+        .replaceAll(/[^0-9]/g, "");
+      saveData(spreadsheetData);
+      computeCells();
+    }
+  });
+
+  // attach focusout event listener to input table
+  tableInput.addEventListener("focusout", function(e) {
+    if (e.target && e.target.nodeName === "TD") {
+      let item = e.target;
+      let spreadsheetData = getData();
+      spreadsheetData[1][defaultColCount] = item.innerHTML
         .replaceAll("<br>", "")
         .replaceAll("&nbsp;", "")
         .replaceAll(/[^0-9]/g, "");
@@ -344,5 +381,9 @@ document.getElementById("addrow").addEventListener("click", e => {
 });
 
 document.getElementById("load").addEventListener("click", e => {
-  console.log("try to add template");
+  console.log("try to add template, json");
+  item = document
+      .getElementById(`picheee`);
+  console.log(item.innerHTML);
+  // https://stackoverflow.com/questions/29534538/save-array-javascript
 });
