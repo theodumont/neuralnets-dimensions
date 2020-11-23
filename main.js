@@ -72,19 +72,25 @@ createTableBodyRow = rowNum => {
     const cell = document.createElement(`${i === 0 ? "th" : "td"}`);
     if (i === 0) {
       cell.contentEditable = false;
+      // content
       const span = document.createElement("span");
-      const dropDownDiv = document.createElement("div");
-      span.innerHTML = rowNum;
-      dropDownDiv.setAttribute("class", "dropdown");
-      dropDownDiv.innerHTML = `<button class="dropbtn" id="row-dropbtn-${rowNum}">+</button>
-        <div id="row-dropdown-${rowNum}" class="dropdown-content">
-          <p class="row-insert-top">Insert 1 row above</p>
-          <p class="row-insert-bottom">Insert 1 row below</p>
-          <p class="row-duplicate">Duplicate row</p>
-          <p class="row-delete">Delete row</p>
-        </div>`;
+      span.innerHTML = (rowNum >= 2) ? rowNum - 1 : "layer";
       cell.appendChild(span);
-      cell.appendChild(dropDownDiv);
+      // dropdown div
+      if (rowNum >= 2) {
+        const dropDownDiv = document.createElement("div");
+        dropDownDiv.setAttribute("class", "dropdown");
+        dropDownDiv.innerHTML = `<button class="dropbtn" id="row-dropbtn-${rowNum}">+</button>
+          <div id="row-dropdown-${rowNum}" class="dropdown-content">
+            <p class="row-insert-top">Insert 1 row above</p>
+            <p class="row-insert-bottom">Insert 1 row below</p>
+            <p class="row-duplicate">Duplicate row</p>
+            <p class="row-delete">Delete row</p>
+          </div>`;
+        cell.appendChild(dropDownDiv);
+      } else {
+        cell.style.backgroundColor = "#f5f5f5";
+      }
       cell.setAttribute("class", "row-header");
     } else if (i === defaultColCount || rowNum === 1) {
       // console.log(cell.style)
