@@ -173,6 +173,22 @@ computeCells = () => {
   this.createSpreadsheet();
 };
 
+// load template
+loadTemplate = () => {
+  const data = this.getData();
+  for (let i = 2; i < data.length; i++) {
+    data[i][defaultColNames.indexOf("Kernel size")] = (i % 2 === 0) ? 2 : 3;
+    data[i][defaultColNames.indexOf("Padding")] = (i % 2 === 0) ? i % 2 + 1 : "";
+    data[i][defaultColNames.indexOf("Stride")] = (i % 2 === 0) ? "" : 2;
+    data[i][defaultColNames.indexOf("Dilation")] = (i % 2 === 0) ? 2 : "";
+  }
+  data[1][defaultColCount] = 320;
+  saveData(data);
+  computeCells();
+  this.createSpreadsheet();
+};
+
+
 // MODIFY ROWS ================================================================
 
 // Utility function to add or duplicate row
@@ -387,9 +403,5 @@ document.getElementById("addrow").addEventListener("click", e => {
 });
 
 document.getElementById("load").addEventListener("click", e => {
-  console.log("try to add template, json");
-  item = document
-      .getElementById(`picheee`);
-  console.log(item.innerHTML);
-  // https://stackoverflow.com/questions/29534538/save-array-javascript
+  loadTemplate();
 });
