@@ -158,8 +158,8 @@ computeDimension = (data_i0, data_i1) => {
   let str = getValue(data_i1, "Stride");
   let dil = getValue(data_i1, "Dilation");
   let out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
-  if (out < 0) {
-    out = "!";
+  if (inp === 0 || isNaN(inp) || out < 0) {
+    out = "< 0";
   }
   return out;
 };
