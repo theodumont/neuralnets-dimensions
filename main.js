@@ -1,7 +1,7 @@
 let defaultRowCount = 7; // No of rows
 let defaultColCount = 5; // No of cols
 let defaultColNames = ["Layer", "Kernel size", "Padding", "Stride", "Dilation", "Output"];
-let defaultColValues = [NaN, NaN, 0, 1, 1, NaN];
+let defaultColValues = [NaN, NaN, 0, 1, 1, 0];
 const SPREADSHEET_DB = "spreadsheet_db";
 
 initializeData = () => {
@@ -158,8 +158,8 @@ computeDimension = (data_i0, data_i1) => {
   let str = getValue(data_i1, "Stride");
   let dil = getValue(data_i1, "Dilation");
   let out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
-  if (inp === 0 || isNaN(inp) || out < 0) {
-    out = "< 0";
+  if (inp === 0 || out < 0) {
+    out = "!";
   }
   return out;
 };
