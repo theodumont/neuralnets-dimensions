@@ -49,16 +49,16 @@ createHeaderRow = () => {
       span.innerHTML = defaultColNames[i];
       // span.innerHTML = `Colonne ${i}`;
       span.setAttribute("class", "column-header-span");
-      const dropDownDiv = document.createElement("div");
-      dropDownDiv.setAttribute("class", "dropdown");
-      dropDownDiv.innerHTML = `<button class="dropbtn" id="col-dropbtn-${i}">+</button>
-        <div id="col-dropdown-${i}" class="dropdown-content">
-          <p class="col-insert-left">Insert 1 column left</p>
-          <p class="col-insert-right">Insert 1 column right</p>
-          <p class="col-delete">Delete column</p>
-        </div>`;
+      // const dropDownDiv = document.createElement("div");
+      // dropDownDiv.setAttribute("class", "dropdown");
+      // dropDownDiv.innerHTML = `<button class="dropbtn" id="col-dropbtn-${i}">+</button>
+      //   <div id="col-dropdown-${i}" class="dropdown-content">
+      //     <p class="col-insert-left">Insert 1 column left</p>
+      //     <p class="col-insert-right">Insert 1 column right</p>
+      //     <p class="col-delete">Delete column</p>
+      //   </div>`;
       th.appendChild(span);
-      th.appendChild(dropDownDiv);
+      // th.appendChild(dropDownDiv);
     }
     tr.appendChild(th);
   }
@@ -330,31 +330,31 @@ createSpreadsheet = () => {
     }
   });
   // Attach click event listener to table headers
-  tableHeaders.addEventListener("click", function(e) {
-    if (e.target) {
-      if (e.target.className === "column-header-span") {
-        console.log("sorting");
-      }
-      if (e.target.className === "dropbtn") {
-        const idArr = e.target.id.split("-");
-        document
-          .getElementById(`col-dropdown-${idArr[2]}`)
-          .classList.toggle("show");
-      }
-      if (e.target.className === "col-insert-left") {
-        const indices = e.target.parentNode.id.split("-");
-        addColumn(parseInt(indices[2]), "left");
-      }
-      if (e.target.className === "col-insert-right") {
-        const indices = e.target.parentNode.id.split("-");
-        addColumn(parseInt(indices[2]), "right");
-      }
-      if (e.target.className === "col-delete") {
-        const indices = e.target.parentNode.id.split("-");
-        deleteColumn(parseInt(indices[2]));
-      }
-    }
-  });
+  // tableHeaders.addEventListener("click", function(e) {
+  //   if (e.target) {
+  //     if (e.target.className === "column-header-span") {
+  //       console.log("sorting");
+  //     }
+  //     if (e.target.className === "dropbtn") {
+  //       const idArr = e.target.id.split("-");
+  //       document
+  //         .getElementById(`col-dropdown-${idArr[2]}`)
+  //         .classList.toggle("show");
+  //     }
+  //     if (e.target.className === "col-insert-left") {
+  //       const indices = e.target.parentNode.id.split("-");
+  //       addColumn(parseInt(indices[2]), "left");
+  //     }
+  //     if (e.target.className === "col-insert-right") {
+  //       const indices = e.target.parentNode.id.split("-");
+  //       addColumn(parseInt(indices[2]), "right");
+  //     }
+  //     if (e.target.className === "col-delete") {
+  //       const indices = e.target.parentNode.id.split("-");
+  //       deleteColumn(parseInt(indices[2]));
+  //     }
+  //   }
+  // });
 
 };
 
