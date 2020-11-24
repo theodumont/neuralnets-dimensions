@@ -402,6 +402,10 @@ document.getElementById("addrow").addEventListener("click", e => {
   this.addRow(-1, "bottom", "insert");
 });
 
+document.getElementById("deleterow").addEventListener("click", e => {
+  this.deleteRow(defaultRowCount);
+});
+
 document.getElementById("load").addEventListener("click", e => {
   loadTemplate();
 });

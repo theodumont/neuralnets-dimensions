@@ -194,6 +194,24 @@ tbody th {
   border-color: #ac2925;
 }
 
+.delete-row-btn {
+  padding: 0.5rem 1.5rem;
+  background-color: #d9534f;
+  color: #fff;
+  border-color: #d43f3a;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: ease 0.3s;
+}
+
+.delete-row-btn:hover {
+  color: #fff;
+  background-color: #c9302c;
+  border-color: #ac2925;
+}
+
 .add-row-btn {
   padding: 0.5rem 1.5rem;
   background-color: #73c62a;
