@@ -101,6 +101,7 @@ createTableBodyRow = rowNum => {
           let option = document.createElement("option");
           option.innerHTML = operationNames[k];
           option.setAttribute("value", k);
+          option.setAttribute("id", `o-${rowNum}-${i}-${k}`);
           select.appendChild(option);
         }
         select.setAttribute("id", `s-${rowNum}-${i}`);
@@ -316,23 +317,30 @@ createSpreadsheet = () => {
 
   // attach focusout event listener to whole table body container
   tableBody.addEventListener("focusout", function(e) {
-    if (e.target && e.target.nodeName === "TD") {
+    if (e.target) {  // exit
       let item = e.target;
       const indices = item.id.split("-");
       let spreadsheetData = getData();
-      spreadsheetData[indices[1]][indices[2]] = item.innerHTML
-        .replaceAll("<br>", "")
-        .replaceAll("&nbsp;", "")
-        .replaceAll(/[^0-9]/g, "");
+      if (e.target.nodeName === "TD") {
+        spreadsheetData[indices[1]][indices[2]] = item.innerHTML
+          .replaceAll("<br>", "")
+          .replaceAll("&nbsp;", "")
+          .replaceAll(/[^0-9]/g, "");
+      } else if (e.target.nodeName === "SELECT") {
+        spreadsheetData[indices[1]][indices[2]] = item.value;
+      }
       saveData(spreadsheetData);
       computeCells();
-    } else if (e.target && e.target.nodeName === "SELECT") {
-      let item = e.target;
-      const indices = item.id.split("-");
-      let spreadsheetData = getData();
-      spreadsheetData[indices[1]][indices[2]] = item.value;
-      saveData(spreadsheetData);
-      computeCells();
+    }
+    if (e.relatedTarget) {  // enter
+      let destination = e.relatedTarget;
+      if (e.relatedTarget.nodeName === "TD") {
+        document.getElementById(destination.id).focus();
+      } else if (e.relatedTarget.nodeName === "SELECT") {
+        console.log("should focus on select menu");
+        // console.log(document.getElementById("o-3-1-1"));
+        // document.getElementById("s-3-1").focus().click();
+      }
     }
   });
 
