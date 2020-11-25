@@ -21,7 +21,7 @@
       <p class="description__text">
         This is a simple spreadsheet that I use whenever I need to manually check the output dimensions of my neural networks.
         <br />
-        For now, the only operations allowed are convolutions. The dimensions are computed from the parameters of each convolution, namely the kernel size <img src="https://latex.codecogs.com/svg.latex?k" title="k" height="10px" />, the padding <img src="https://latex.codecogs.com/svg.latex?p" title="p" height="9.8px" align="absbottom" />, the stride <img src="https://latex.codecogs.com/svg.latex?s" title="s" height="7px" /> and the dilation rate <img src="https://latex.codecogs.com/svg.latex?d" title="d" height="10px" /> using the formula:
+        For now, the operations allowed are convolutions and poolings. The dimensions are computed from the parameters of each layer, namely the kernel size <img src="https://latex.codecogs.com/svg.latex?k" title="k" height="10px" />, the padding <img src="https://latex.codecogs.com/svg.latex?p" title="p" height="9.8px" align="absbottom" />, the stride <img src="https://latex.codecogs.com/svg.latex?s" title="s" height="7px" /> and the dilation rate <img src="https://latex.codecogs.com/svg.latex?d" title="d" height="10px" /> using the formula:
       </p>
       <img src="https://latex.codecogs.com/svg.latex?n_{out}=\left\lfloor\frac{n_{in}+2p-k-(k-1)(d-1)}{s}\right\rfloor+1" title="formula" class="description__formula" />
     </section>

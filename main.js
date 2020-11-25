@@ -1,7 +1,8 @@
 let defaultRowCount = 7; // No of rows
-let defaultColCount = 5; // No of cols
-let defaultColNames = ["Layer", "Kernel size", "Padding", "Stride", "Dilation", "Output"];
-let defaultColValues = [NaN, NaN, 0, 1, 1, 0];
+let defaultColCount = 6; // No of cols
+let defaultColNames = ["Layer", "Type", "Kernel size", "Padding", "Stride", "Dilation", "Output"];
+let defaultColValues = [NaN, 0, NaN, 0, 1, 1, 0];
+let operationNames = ["convolution", "pooling"];
 const SPREADSHEET_DB = "spreadsheet_db";
 
 initializeData = () => {
@@ -70,14 +71,15 @@ createTableBodyRow = rowNum => {
   tr.setAttribute("id", `r-${rowNum}`);
   for (let i = 0; i <= defaultColCount; i++) {
     const cell = document.createElement(`${i === 0 ? "th" : "td"}`);
-    if (i === 0) {
+    cell.contentEditable = true;
+    if (i === 0) {  // layers column
       cell.contentEditable = false;
       // content
       const span = document.createElement("span");
       span.innerHTML = (rowNum >= 2) ? rowNum - 1 : "layer";
       cell.appendChild(span);
       // dropdown div
-      if (rowNum >= 2) {
+      if (rowNum >= 2) {  // layers rows
         const dropDownDiv = document.createElement("div");
         dropDownDiv.setAttribute("class", "dropdown");
         dropDownDiv.innerHTML = `<button class="dropbtn" id="row-dropbtn-${rowNum}">+</button>
@@ -88,25 +90,34 @@ createTableBodyRow = rowNum => {
             <p class="row-delete">Delete row</p>
           </div>`;
         cell.appendChild(dropDownDiv);
-      } else {
+      } else {  // header
         cell.style.backgroundColor = "#f5f5f5";
       }
       cell.setAttribute("class", "row-header");
-    } else if (i === defaultColCount || rowNum === 1) {
-      // console.log(cell.style)
-      cell.contentEditable = false;
-      cell.style.backgroundColor = "#f5f5f5";
-      if (rowNum === 1 && i === defaultColCount) {
+    } else if (i === 1 && rowNum >= 2) {  // type column
+        cell.contentEditable = false;
+        const select = document.createElement("select");
+        for (k = 0; k < operationNames.length; k++) {
+          let option = document.createElement("option");
+          option.innerHTML = operationNames[k];
+          option.setAttribute("value", k);
+          select.appendChild(option);
+        }
+        select.setAttribute("id", `s-${rowNum}-${i}`);
+        cell.appendChild(select);
+
+    } if (i === defaultColCount || rowNum === 1) {  // grayed out cells
+        cell.contentEditable = false;
+        cell.style.backgroundColor = "#f5f5f5";
+    } if (rowNum === 1 && i === defaultColCount) {  // input cell
+        cell.contentEditable = false;
         cell.style.borderColor = "#73c62a";
         cell.style.borderWidth = "2px";
         cell.style.borderRadius = "2px";
-      } else if (rowNum === defaultRowCount) {
+    } if (rowNum === defaultRowCount && i === defaultColCount) {  // output cell
         cell.style.borderColor = "#f88787";
         cell.style.borderWidth = "2px";
         cell.style.borderRadius = "2px";
-      }
-    } else {
-      cell.contentEditable = true;
     }
     cell.setAttribute("id", `r-${rowNum}-${i}`);
     // cell.id = `${rowNum}-${i}`;
@@ -126,12 +137,17 @@ populateTable = () => {
   const data = this.getData();
   if (data === undefined || data === null) return;
 
-  for (let i = 1; i < data.length; i++) {
-    for (let j = 1; j < data[i].length; j++) {
+  for (let i = 1; i < data.length; i++) {  // cells
+    for (let j = 2; j < data[i].length; j++) {
       const cell = document.getElementById(`r-${i}-${j}`);
       cell.innerHTML = data[i][j];
     }
   }
+  for (let i = 2; i < data.length; i++) {  // select
+    let selectItem = document.getElementById(`s-${i}-1`);
+    selectItem.value = data[i][1];
+  }
+
   // put input/output values into table
   let inputItem = document.getElementById("table-input");
   inputItem.innerHTML = data[1][defaultColCount];
@@ -152,12 +168,18 @@ getValue = (data_row, name) => {
 
 // Formula for output
 computeDimension = (data_i0, data_i1) => {
+  let typ = getValue(data_i1, "Type");
   let inp = getValue(data_i0, "Output");
   let ker = getValue(data_i1, "Kernel size");
   let pad = getValue(data_i1, "Padding");
   let str = getValue(data_i1, "Stride");
   let dil = getValue(data_i1, "Dilation");
-  let out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
+  let out = "!";
+  if (typ === 0 ) {  // convolution
+    out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
+  } else if (typ === 1) {  // pooling
+    out = Math.trunc((inp + 2*pad - ker - (ker-1)*(dil-1)) / str) + 1;
+  }
   if (inp === 0 || out < 0) {
     out = "!";
   }
@@ -171,8 +193,8 @@ computeCells = () => {
     data[i][defaultColNames.indexOf("Output")] = computeDimension(data[i-1], data[i]);
   }
   saveData(data);
-  let item = document.getElementById("table-output");
-  item.innerHTML = data[defaultRowCount][defaultColCount];
+  let itemOutput = document.getElementById("table-output");
+  itemOutput.innerHTML = data[defaultRowCount][defaultColCount];
   this.createSpreadsheet();
 };
 
@@ -180,6 +202,7 @@ computeCells = () => {
 loadTemplate = () => {
   const data = this.getData();
   for (let i = 2; i < data.length; i++) {
+    data[i][defaultColNames.indexOf("Type")] = ((i-1) % 3 === 0) ? 1 : 0;
     data[i][defaultColNames.indexOf("Kernel size")] = (i % 2 === 0) ? 2 : 3;
     data[i][defaultColNames.indexOf("Padding")] = (i % 2 === 0) ? i % 2 + 1 : "";
     data[i][defaultColNames.indexOf("Stride")] = (i % 2 === 0) ? "" : 2;
@@ -285,7 +308,6 @@ createSpreadsheet = () => {
 
   tableHeaders.innerHTML = "";
   tableBody.innerHTML = "";
-  tableBody.innerHTML = "";
 
   tableHeaders.appendChild(createHeaderRow(defaultColCount));
   createTableBody(tableBody, defaultRowCount, defaultColCount);
@@ -302,6 +324,13 @@ createSpreadsheet = () => {
         .replaceAll("<br>", "")
         .replaceAll("&nbsp;", "")
         .replaceAll(/[^0-9]/g, "");
+      saveData(spreadsheetData);
+      computeCells();
+    } else if (e.target && e.target.nodeName === "SELECT") {
+      let item = e.target;
+      const indices = item.id.split("-");
+      let spreadsheetData = getData();
+      spreadsheetData[indices[1]][indices[2]] = item.value;
       saveData(spreadsheetData);
       computeCells();
     }
